@@ -694,7 +694,7 @@
   </Group>
 
   <Group>
-    <GroupName>System_Config</GroupName>
+    <GroupName>CPU_Init</GroupName>
     <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>

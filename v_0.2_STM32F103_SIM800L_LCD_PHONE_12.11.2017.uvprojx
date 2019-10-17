@@ -593,7 +593,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>System_Config</GroupName>
+          <GroupName>CPU_Init</GroupName>
           <Files>
             <File>
               <FileName>cpu_init.c</FileName>
