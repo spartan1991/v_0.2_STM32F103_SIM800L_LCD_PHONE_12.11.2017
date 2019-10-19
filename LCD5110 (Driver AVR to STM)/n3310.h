@@ -1,21 +1,3 @@
-/*
- * Имя          :  n3310.h
- *
- * Описание     :  Это заголовочный файл для драйвера графического LCD от Nokia 3310, а также его китайских клонов.
- *                 Базируется на коде библиотек написанных Sylvain Bissonnette и Fandi Gunawan:
- *                 http://www.microsyl.com/index.php/2010/03/24/nokia-lcd-library/
- *                 http://fandigunawan.wordpress.com/2008/06/18/lcd-nokia-3310-pcd8544-driver-in-winavravr-gcc/
- *                 Основные отличия между оригиналом и клоном хорошо описаны в статье от Aheir:
- *                 http://radiokot.ru/articles/29/
- *
- * Автор        :  Xander Gresolio <xugres@gmail.com>
- * Веб-страница :  http://we.easyelectronics.ru/profile/XANDER/
- *
- * Лицензия     :  GPL v3.0
- *
- * Компилятор   :  WinAVR, GCC for AVR platform
- */
-
 #ifndef _N3310_H_
 #define _N3310_H_
 
@@ -102,9 +84,10 @@ byte LcdPixel      ( byte x, byte y, LcdPixelMode mode );   // Точка
 byte LcdLine       ( byte x1, byte y1, byte x2, byte y2, LcdPixelMode mode );   // Линия
 byte LcdCircle     ( byte x, byte y, byte radius, LcdPixelMode mode);   // Окружность
 byte LcdRect       ( byte x1, byte y1, byte x2, byte y2, LcdPixelMode mode );   // Прямоугольник
-byte LcdSingleBar  ( byte baseX, byte baseY, byte height, byte width, LcdPixelMode mode );   // Один 
+byte LcdSingleBar ( byte x1, byte y1, byte x2, byte y2, LcdPixelMode mode ); // Закрашенный прямоугольник
 byte LcdBars       ( byte data[], byte numbBars, byte width, byte multiplier );   // Несколько
-
+int LcdProgressBar(byte baseX, byte baseY, byte width, byte height, byte rotate, byte gap, LcdPixelMode mode, byte percent);
+void LcdMouse(byte x, byte y, byte action, byte size, LcdPixelMode mode);
 
 /*
  * Таблица для отображения символов (ASCII[0x20-0x7F] + CP1251[0xC0-0xFF] = всего 160 символов)
@@ -175,7 +158,8 @@ static const byte FontLookup [][5] =
    { 0x00, 0x41, 0x41, 0x7F, 0x00 },   // ] 0x5D  93
    { 0x04, 0x02, 0x01, 0x02, 0x04 },   // ^ 0x5E  94
    { 0x40, 0x40, 0x40, 0x40, 0x40 },   // _ 0x5F  95
-   { 0x00, 0x01, 0x02, 0x04, 0x00 },   // ` 0x60  96
+	 //{ 0x00, 0x01, 0x02, 0x04, 0x00 },   // ` 0x60  96
+   { 0x20, 0x30, 0x38, 0x30, 0x20 },   // ` //    ▲
    { 0x20, 0x54, 0x54, 0x54, 0x78 },   // a 0x61  97
    { 0x7F, 0x48, 0x44, 0x44, 0x38 },   // b 0x62  98
    { 0x38, 0x44, 0x44, 0x44, 0x20 },   // c 0x63  99
@@ -206,7 +190,8 @@ static const byte FontLookup [][5] =
    { 0x00, 0x00, 0x7F, 0x00, 0x00 },   // | 0x7C 124
    { 0x00, 0x41, 0x36, 0x08, 0x00 },   // } 0x7D 125
    { 0x08, 0x04, 0x08, 0x10, 0x08 },   // ~ 0x7E 126
-   { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF },   //  0x7F 127
+   //{ 0xFF, 0xFF, 0xFF, 0xFF, 0xFF },   //   0x7F 127
+	 { 0x02, 0x06, 0x0E, 0x06, 0x02 },   //  //   ▼  
 
    { 0x7C, 0x12, 0x11, 0x12, 0x7C },   // А 0xC0 192
    { 0x7F, 0x49, 0x49, 0x49, 0x31 },   // Б 0xC1 193

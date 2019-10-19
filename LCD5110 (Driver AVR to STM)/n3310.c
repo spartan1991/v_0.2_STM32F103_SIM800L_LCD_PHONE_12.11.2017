@@ -1,37 +1,9 @@
-/*
- * Имя          :  n3310.c
- *
- * Описание     :  Это драйвер для графического LCD от Nokia 3310, а также его китайских клонов.
- *                 Базируется на коде библиотек написанных Sylvain Bissonnette и Fandi Gunawan:
- *                 http://www.microsyl.com/index.php/2010/03/24/nokia-lcd-library/
- *                 http://fandigunawan.wordpress.com/2008/06/18/lcd-nokia-3310-pcd8544-driver-in-winavravr-gcc/
- *                 Основные отличия между оригиналом и клоном хорошо описаны в статье от Aheir:
- *                 http://radiokot.ru/articles/29/
- *
- * Автор        :  Xander Gresolio <xugres@gmail.com>
- * Веб-страница :  http://we.easyelectronics.ru/profile/XANDER/
- *
- * Лицензия     :  GPL v3.0
- *
- * Компилятор   :  WinAVR, GCC for AVR platform
- *
- * История      :
- * Версия 1.0 (06.08.2011)
- * + Первая версия
- * + Добавлена поддержка китайских клонов LCD Nokia 3310
- * + Полный перевод комментариев к исходному коду драйвера
- * + Таблица символов драйвера дополнена кириллицей (упрощенная Windows-1251)
- * + Добавлена функция рисования окружностей LcdCircle
- * - Исправлены ошибки в проверке корректности координат при вызове функций рисования
- * - Исправлена ошибка в функции LcdSingleBar (неверная отрисовка по y)
- */
-
 #include "stm32f10x.h"       // Добавляем файл описания архитектуры
 #include "stm32f10x_rcc.h"   // Добавляем файл описания модулей тактирования
 #include "stm32f10x_gpio.h"  // Добавляем файл описания портов ввода-вывода
-#include <stdint.h>          // Добавляем файл описания типов данных (стандартная библиотека "Си")
+#include "stdint.h"          // Добавляем файл описания типов данных 
 #include "n3310.h"
-#include <string.h>
+#include "string.h"
 #include "pgmspace.h"
 
 static __IO uint32_t TimingDelay = 0;
@@ -55,14 +27,10 @@ void Delay_US(__IO uint32_t nTime);
         #define PSTR(x) x
 #endif
 
-
-
 // Прототипы приватных функций драйвера
 
 static void LcdSend    ( byte data, LcdCmdData mode );
 static void Delay      ( void );
-
-// Глобальные переменные
 
 // Кэш в ОЗУ 84*48 бит или 504 байта
 static byte  LcdCache [ LCD_CACHE_SIZE ];
@@ -77,9 +45,7 @@ static int   HiWaterMark;   // верхняя граница
 static int   LcdCacheIdx;
 
 // Флаг изменений кэша
-static byte  UpdateLcd;
-
-
+static byte UpdateLcd;
 
 /*
  * Имя                   :  LcdInit
@@ -130,16 +96,14 @@ void LcdInit ( void ){
 	LcdUpdate();
 }
 
-
-
 /*
  * Имя                   :  LcdClear
  * Описание              :  Очищает дисплей. Далее необходимо выполнить LcdUpdate
  * Аргумент(ы)           :  Нет
  * Возвращаемое значение :  Нет
  */
-void LcdClear ( void )
-{
+void LcdClear ( void ){
+	
 //    // Очистка кэша дисплея
 //    int i;
 //    for ( i = 0; i < LCD_CACHE_SIZE; i++ )
@@ -158,16 +122,14 @@ void LcdClear ( void )
     UpdateLcd = TRUE;
 }
 
-
-
 /*
  * Имя                   :  LcdUpdate
  * Описание              :  Копирует кэш в ОЗУ дисплея
  * Аргумент(ы)           :  Нет
  * Возвращаемое значение :  Нет
  */
-void LcdUpdate (void)
-{
+void LcdUpdate (void){
+	
     int i;
 
     if ( LoWaterMark < 0 )
@@ -240,8 +202,6 @@ void LcdUpdate (void)
     UpdateLcd = FALSE;
 }
 
-
-
 /*
  * Имя                   :  LcdSend
  * Описание              :  Отправляет данные в контроллер дисплея
@@ -289,21 +249,18 @@ static void LcdSend(byte data, LcdCmdData cd) {
 		}
 	}
 
-
 /*
  * Имя                   :  LcdContrast
  * Описание              :  Устанавливает контрастность дисплея
  * Аргумент(ы)           :  контраст -> значение от 0x00 к 0x7F
  * Возвращаемое значение :  Нет
  */
-void LcdContrast ( byte contrast )
-{
+void LcdContrast ( byte contrast ){
+	
     LcdSend( 0x21, LCD_CMD );              // Расширенный набор команд
     LcdSend( 0x80 | contrast, LCD_CMD );   // Установка уровня контрастности
     LcdSend( 0x20, LCD_CMD );              // Стандартный набор команд, горизонтальная адресация
 }
-
-
 
 /*
  * Имя                   :  Delay
@@ -311,13 +268,11 @@ void LcdContrast ( byte contrast )
  * Аргумент(ы)           :  Нет
  * Возвращаемое значение :  Нет
  */
-static void Delay ( void )
-{
+static void Delay ( void ){
+	
     int i;
-
     for ( i = -32000; i < 32000; i++ );
 }
-
 
 /*
  * Имя                   :  LcdGotoXYFont
@@ -325,8 +280,8 @@ static void Delay ( void )
  * Аргумент(ы)           :  x,y -> координаты новой позиции курсора. Значения: 0,0 .. 13,5
  * Возвращаемое значение :  смотри возвращаемое значение в n3310.h
  */
-byte LcdGotoXYFont ( byte x, byte y )
-{
+byte LcdGotoXYFont ( byte x, byte y ){
+	
     // Проверка границ
     if( x > 13 || y > 5 ) return OUT_OF_BORDER;
 
@@ -335,8 +290,6 @@ byte LcdGotoXYFont ( byte x, byte y )
     return OK;
 }
 
-
-
 /*
  * Имя                   :  LcdChr
  * Описание              :  Выводит символ в текущей позиции курсора, затем инкрементирует положение курсора
@@ -344,8 +297,8 @@ byte LcdGotoXYFont ( byte x, byte y )
  *                          ch   -> символ для вывода
  * Возвращаемое значение :  смотри возвращаемое значение в n3310lcd.h
  */
-byte LcdChr ( LcdFontSize size, byte ch )
-{
+byte LcdChr ( LcdFontSize size, byte ch ){
+	
     byte i, c;
     byte b1, b2;
     int  tmpIdx;
@@ -439,8 +392,6 @@ byte LcdChr ( LcdFontSize size, byte ch )
     return OK;
 }
 
-
-
 /*
  * Имя                   :  LcdStr
  * Описание              :  Эта функция предназначена для печати строки которая хранится в RAM
@@ -448,8 +399,8 @@ byte LcdChr ( LcdFontSize size, byte ch )
  *                          dataArray -> массив содержащий строку которую нужно напечатать
  * Возвращаемое значение :  смотри возвращаемое значение в n3310lcd.h
  */
-byte LcdStr ( LcdFontSize size, byte dataArray[] )
-{
+byte LcdStr ( LcdFontSize size, byte dataArray[] ){
+	
     byte tmpIdx=0;
     byte response;
     while( dataArray[ tmpIdx ] != '\0' )
@@ -466,8 +417,6 @@ byte LcdStr ( LcdFontSize size, byte dataArray[] )
     return OK;
 }
 
-
-
 /*
  * Имя                   :  LcdFStr
  * Описание              :  Эта функция предназначена для печати строки которая хранится в Flash ROM
@@ -477,8 +426,8 @@ byte LcdStr ( LcdFontSize size, byte dataArray[] )
  * Пример                :  LcdFStr(FONT_1X, PSTR("Hello World"));
  *                          LcdFStr(FONT_1X, &name_of_string_as_array);
  */
-byte LcdFStr ( LcdFontSize size, const byte *dataPtr )
-{
+byte LcdFStr ( LcdFontSize size, const byte *dataPtr ){
+	
     byte c;
     byte response;
     for ( c = pgm_read_byte( dataPtr ); c; ++dataPtr, c = pgm_read_byte( dataPtr ) )
@@ -492,8 +441,6 @@ byte LcdFStr ( LcdFontSize size, const byte *dataPtr )
     return OK;
 }
 
-
-
 /*
  * Имя                   :  LcdPixel
  * Описание              :  Отображает пиксель по абсолютным координатам (x,y)
@@ -501,8 +448,8 @@ byte LcdFStr ( LcdFontSize size, const byte *dataPtr )
  *                          mode -> Off, On или Xor. Смотри enum в n3310.h
  * Возвращаемое значение :  смотри возвращаемое значение в n3310lcd.h
  */
-byte LcdPixel ( byte x, byte y, LcdPixelMode mode )
-{
+byte LcdPixel ( byte x, byte y, LcdPixelMode mode ){
+	
     int  index;
     byte  offset;
     byte  data;
@@ -551,8 +498,6 @@ byte LcdPixel ( byte x, byte y, LcdPixelMode mode )
     return OK;
 }
 
-
-
 /*
  * Имя                   :  LcdLine
  * Описание              :  Рисует линию между двумя точками на дисплее (алгоритм Брезенхэма)
@@ -561,8 +506,8 @@ byte LcdPixel ( byte x, byte y, LcdPixelMode mode )
  *                          mode    -> Off, On или Xor. Смотри enum в n3310.h
  * Возвращаемое значение :  смотри возвращаемое значение в n3310lcd.h
  */
-byte LcdLine ( byte x1, byte y1, byte x2, byte y2, LcdPixelMode mode )
-{
+byte LcdLine ( byte x1, byte y1, byte x2, byte y2, LcdPixelMode mode ){
+	
     int dx, dy, stepx, stepy, fraction;
     byte response;
 
@@ -647,8 +592,6 @@ byte LcdLine ( byte x1, byte y1, byte x2, byte y2, LcdPixelMode mode )
     return OK;
 }
 
-
-
 /*
  * Имя                   :  LcdCircle
  * Описание              :  Рисует окружность (алгоритм Брезенхэма)
@@ -657,8 +600,8 @@ byte LcdLine ( byte x1, byte y1, byte x2, byte y2, LcdPixelMode mode )
  *                          mode   -> Off, On или Xor. Смотри enum в n3310.h
  * Возвращаемое значение :  смотри возвращаемое значение в n3310lcd.h
  */
-byte LcdCircle(byte x, byte y, byte radius, LcdPixelMode mode)
-{
+byte LcdCircle(byte x, byte y, byte radius, LcdPixelMode mode){
+	
     signed char xc = 0;
     signed char yc = 0;
     signed char p = 0;
@@ -686,49 +629,43 @@ byte LcdCircle(byte x, byte y, byte radius, LcdPixelMode mode)
     return OK;
 }
 
-
 /*
  * Имя                   :  LcdSingleBar
  * Описание              :  Рисует один закрашенный прямоугольник
- * Аргумент(ы)           :  baseX  -> абсолютная координата x (нижний левый угол)
- *                          baseY  -> абсолютная координата y (нижний левый угол)
- *                          height -> высота (в пикселях)
- *                          width  -> ширина (в пикселях)
+ * Аргумент(ы)           :  x1    -> абсолютная координата x левого верхнего угла
+ *                          y1    -> абсолютная координата y левого верхнего угла
+ *                          x2    -> абсолютная координата x правого нижнего угла
+ *                          y2    -> абсолютная координата y правого нижнего угла
  *                          mode   -> Off, On или Xor. Смотри enum в n3310.h
  * Возвращаемое значение :  смотри возвращаемое значение в n3310lcd.h
  */
-byte LcdSingleBar ( byte baseX, byte baseY, byte height, byte width, LcdPixelMode mode )
-{
-    byte tmpIdxX,tmpIdxY,tmp;
-
+byte LcdSingleBar ( byte x1, byte y1, byte x2, byte y2, LcdPixelMode mode ){
+	
+    byte tmpIdxX,tmpIdxY;
     byte response;
 
     // Проверка границ
-    if ( ( baseX >= LCD_X_RES) || ( baseY >= LCD_Y_RES) ) return OUT_OF_BORDER;
+    if ( ( x1 >= LCD_X_RES) || ( y1 >= LCD_Y_RES) ) return OUT_OF_BORDER;
 
-    if ( height > baseY )
-        tmp = 0;
-    else
-        tmp = baseY - height + 1;
-
-    // Рисование линий
-    for ( tmpIdxY = tmp; tmpIdxY <= baseY; tmpIdxY++ )
-    {
-        for ( tmpIdxX = baseX; tmpIdxX < (baseX + width); tmpIdxX++ )
-        {
-            response = LcdPixel( tmpIdxX, tmpIdxY, mode );
-            if(response)
+		// Рисование линий
+    if ( y2 > y1 && x2 > x1)
+		{
+			  for ( tmpIdxY = y1; tmpIdxY <= y2; tmpIdxY++ )
+				{
+						for ( tmpIdxX = x1; tmpIdxX < x2; tmpIdxX++ )
+						{
+								response = LcdPixel( tmpIdxX, tmpIdxY, mode );
+								if(response)
                 return response;
-
-        }
-    }
-
-    // Установка флага изменений кэша
-    UpdateLcd = TRUE;
-    return OK;
+						}
+				}
+				// Установка флага изменений кэша
+				UpdateLcd = TRUE;
+				return OK;
+		}
+		
+		else return 0;
 }
-
-
 
 /*
  * Имя                   :  LcdBars
@@ -742,8 +679,8 @@ byte LcdSingleBar ( byte baseX, byte baseY, byte height, byte width, LcdPixelMod
  * Пример                :  byte example[5] = {1, 2, 3, 4, 5};
  *                          LcdBars(example, 5, 3, 2);
  */
-byte LcdBars ( byte data[], byte numbBars, byte width, byte multiplier )
-{
+byte LcdBars ( byte data[], byte numbBars, byte width, byte multiplier ){
+	
     byte b;
     byte tmpIdx = 0;
     byte response;
@@ -768,8 +705,6 @@ byte LcdBars ( byte data[], byte numbBars, byte width, byte multiplier )
 
 }
 
-
-
 /*
  * Имя                   :  LcdRect
  * Описание              :  Рисует незакрашенный прямоугольник
@@ -780,8 +715,8 @@ byte LcdBars ( byte data[], byte numbBars, byte width, byte multiplier )
  *                          mode  -> Off, On или Xor. Смотри enum в n3310.h
  * Возвращаемое значение :  смотри возвращаемое значение в n3310lcd.h
  */
-byte LcdRect ( byte x1, byte y1, byte x2, byte y2, LcdPixelMode mode )
-{
+byte LcdRect ( byte x1, byte y1, byte x2, byte y2, LcdPixelMode mode ){
+	
     byte tmpIdx;
 
     // Проверка границ
@@ -810,16 +745,14 @@ byte LcdRect ( byte x1, byte y1, byte x2, byte y2, LcdPixelMode mode )
     return OK;
 }
 
-
-
 /*
  * Имя                   :  LcdImage
  * Описание              :  Рисует картинку из массива сохраненного в Flash ROM
  * Аргумент(ы)           :  Указатель на массив картинки
  * Возвращаемое значение :  Нет
  */
-void LcdImage ( const byte *imageData )
-{
+void LcdImage(const byte *imageData){
+	
 //    // Инициализация указателя кэша
 //    LcdCacheIdx = 0;
 //    // В пределах кэша
@@ -840,23 +773,19 @@ void LcdImage ( const byte *imageData )
     UpdateLcd = TRUE;
 }
 
-
-
 /*
- * Имя                   :  LcdVariable
- * Описание              :  Выводит значение переменной
+ * Имя                   :  IntToString
+ * Описание              :  Преобразование числа(int) в строку
  * Аргумент(ы)           :  Переменная (указатель на переменную)
  * Возвращаемое значение :  Нет
  */
+unsigned char SYMBOLS[DIG_BASE] = {'0','1','2','3','4','5','6','7','8','9'}; // Массив символов, соответствующих цифрам выбранной системы
+unsigned char out[MAX_SIZE];  // Выходной массив символов
 
-// Данные для функции выводаа переменной
-unsigned char SYMBOLS[DIG_BASE] =
-{'0','1','2','3','4','5','6','7','8','9'}; // Массив символов, соответствующих цифрам выбранной системы
-unsigned char out[MAX_SIZE];               // Выходной массив символов
-
-void LcdVariable (unsigned int NUM)
- {
+void IntToString(unsigned int NUM){
+	
 	 int i, m;
+	
 	 for(i=MAX_SIZE-1; i>=0; i--)
 	 {
 		 m = NUM % DIG_BASE;
@@ -873,4 +802,88 @@ void LcdVariable (unsigned int NUM)
 		 }
 	 }
 	 LcdFStr(FONT_1X,(uint8_t*)out);
+ }
+
+ /*
+ * Имя                   :  RangeCheck
+ * Описание              :  Проверка диапазона
+ * Аргумент(ы)           :  min    -> нижний предел
+ *                       :  max    -> верхний предел
+ *                       :  value  -> проверяемое значение
+ * Возвращаемое значение :  Значение
+ */
+ byte RangeCheck(byte min, byte max, byte value){
+	 
+	 if(value < min) return min;
+	 if(value > max) return max; 
+	 
+	 return value;
+ }
+ 
+ /*
+ * Имя                   :  LcdProgressBar
+ * Описание              :  Выводит ProgressBar
+ * Аргумент(ы)           :  baseX   -> абсолютная координата x левого верхнего угла
+ *                       :  baseY   -> абсолютная координата y левого верхнего угла
+ *                       :  width   -> длина ProgressBar-а
+ *                       :  height  -> высота ProgressBar-а
+ *                       :  rotate  -> 0 - горизонтальное заполнение \ 1 - вертикальное
+ *                       :  gap     -> (число) отступ заполнения от рамки ProgressBar-а
+ *                       :  mode    -> Off, On или Xor. Смотри enum в n3310.h 
+ *                       :  percent -> процент заполнения ProgressBar-а
+ * Возвращаемое значение :  возвращает текущий процент
+ */
+ int LcdProgressBar(byte baseX, byte baseY, byte width, byte height, byte rotate, byte gap, LcdPixelMode mode, byte percent){
+	 
+	 byte barPercent = RangeCheck(0, 100, percent);
+	 byte x1, y1, x2, y2;
+	 float result;
+	 
+	 LcdRect(baseX, baseY, baseX+width, baseY+height, mode);
+	 
+	 switch(rotate){
+		 
+		 case 0: {
+		 
+			 result = ((float)(width-gap*2)/100)*barPercent;
+			 
+			 x1 = baseX+gap;
+	     y1 = baseY+gap;
+	     x2 = x1+result;
+	     y2 = (baseY+height)-gap;
+			 
+			 if(barPercent==100) ++x2;
+			 LcdSingleBar(x1, y1, x2, y2, mode); 
+		 }break;
+		 
+		 case 1: {
+
+			 result = ((float)(height-gap*2)/100)*barPercent;
+			 
+			 x1 = baseX+gap;
+			 x2 = (x1+width)-gap*2+1;
+			 y2 = (baseY+height)-gap;
+			 y1 = (y2-result);
+	     
+			 
+			 LcdSingleBar(x1, y1, x2, y2, mode); 
+		 }break;
+	 }
+	 
+	 return barPercent;
+ }
+ 
+ /*
+ * Имя                   :  LcdMouse
+ * Описание              :  Выводит указатель мыши
+ * Аргумент(ы)           :         X    -> координата X вершины указателя
+ *                       :         Y    -> координата Y вершины указателя
+ *                       :  mouseAction -> действие\нажатие
+ * Возвращаемое значение :  
+ */
+ void LcdMouse(byte x, byte y, byte action, byte size, LcdPixelMode mode){
+	 
+	 LcdLine(x, y, x+size, y+1, mode);
+	 LcdLine(x, y, (x+1)+size, (y+1)+size, mode);
+	 LcdLine(x, y, x+1, y+size, mode);
  }

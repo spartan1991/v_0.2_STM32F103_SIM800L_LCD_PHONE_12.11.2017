@@ -8,15 +8,14 @@
 #include "uart.h"
 #include "stm32f10x_conf.h"
 
-
 extern uint32_t TransitBuffer[16];
 extern uint32_t CleanedDataBuffer[16];
 
 uint8_t val;
 
 //Функция опроса клавиатуры
-void KeysScan(void)
-{
+void KeysScan(void){
+	
 		val = 0;
 
 	  if(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_5)==0) val = 1; // LEFT
@@ -26,24 +25,22 @@ void KeysScan(void)
 	  if(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_7)==0) val = 5; // CENTER
 }
 
-void DataBufferClear (void)
-{
-	if(val==5)
-	{
+void DataBufferClear (void){
+	
+	if(val==5){		
 		int i;
-		for(i=0; i<16; i++)
-		{
+		
+		for(i=0; i<16; i++){
 			TransitBuffer[i] = 0;
 		}
 	}
 }
 
-void BufferFiltering (void)
-{
-	for(int i=0; i<16; i++)
-	{
-		if((TransitBuffer[i]!='\r')&&(TransitBuffer[i]!='\n'))
-		{
+void BufferFiltering (void){
+	
+	for(int i=0; i<16; i++){
+		
+		if((TransitBuffer[i]!='\r')&&(TransitBuffer[i]!='\n')){
 			CleanedDataBuffer[i] = TransitBuffer[i];
 		}
 		else CleanedDataBuffer[i] = ' ';
