@@ -8,6 +8,7 @@
 int main(void)
 {
 	if(pdTRUE != xTaskCreate(vTask_SystemInit,"SystemInit",configMINIMAL_STACK_SIZE, NULL, 1, NULL)) ERROR_ACTION(TASK_NOT_CREATE,0);
+	if(pdTRUE != xTaskCreate(vTask_OperativeComputing,"vTask_OperativeComputing",configMINIMAL_STACK_SIZE, NULL, 1, NULL)) ERROR_ACTION(TASK_NOT_CREATE,0);
 	if(pdTRUE != xTaskCreate(vTask_ScanInputDevices,"vTask_ScanInputDevices",configMINIMAL_STACK_SIZE, NULL, 1, NULL)) ERROR_ACTION(TASK_NOT_CREATE,0);
 	if(pdTRUE != xTaskCreate(vTask_Visualization,"vTask_Visualization",configMINIMAL_STACK_SIZE, NULL, 1, NULL)) ERROR_ACTION(TASK_NOT_CREATE,0);
 

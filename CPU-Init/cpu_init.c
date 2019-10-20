@@ -7,10 +7,8 @@
 #include "stm32f10x_conf.h"
 #include "uart.h"
 
-#define DMA_BUFFER_SIZE	 16
-
-uint32_t TransitBuffer[16];
-uint32_t CleanedDataBuffer[16];
+uint32_t DMABuffer[DMA_BUFFER_SIZE];
+uint32_t GPSBuffer[DMA_BUFFER_SIZE];
 
 void System_config(void)
 {
@@ -75,7 +73,7 @@ void System_config(void)
 }
 
 //Функция настройки UART1
-void UART1_config(void)
+void USART1_GPS_config(void)
 {
   //Заполняем структуру настройками 3-го UARTa
   USART_InitTypeDef uart1_struct;
@@ -90,14 +88,14 @@ void UART1_config(void)
   USART_Init(USART1, &uart1_struct);
 	
 	//Активируем приём с последовательного порта по запросу DMA
-  //USART_DMACmd(USART1, USART_DMAReq_Rx, ENABLE);
+  USART_DMACmd(USART1, USART_DMAReq_Rx, ENABLE);
 
   //Включаем UART
   USART_Cmd(USART1, ENABLE);
 }
 
 //Функция настройки UART3
-void UART3_config(void)
+void USART3_GSM_config(void)
 {
   //Заполняем структуру настройками 3-го UARTa
   USART_InitTypeDef uart3_struct;
@@ -112,22 +110,22 @@ void UART3_config(void)
   USART_Init(USART3, &uart3_struct);
 	
 	//Активируем приём с последовательного порта по запросу DMA
-  USART_DMACmd(USART3, USART_DMAReq_Rx, ENABLE);
+  //USART_DMACmd(USART3, USART_DMAReq_Rx, ENABLE);
 
   //Включаем UART
   USART_Cmd(USART3, ENABLE);
 }
 
 //Функция настройки DMA1
-void DMA_config(void)
+void DMA1_GPS_config(void)
 {
   DMA_InitTypeDef dma;  //Создаём структуру для настройки DMA1
   //Заполняем структуру настройками DMA1
   DMA_StructInit(&dma);
-  dma.DMA_PeripheralBaseAddr = (uint32_t)&(USART3->DR);     // это адрес регистра данных USART3
-  dma.DMA_MemoryBaseAddr = (uint32_t)&TransitBuffer[0];     // адрес нулевого элемента массива
+  dma.DMA_PeripheralBaseAddr = (uint32_t)&(USART1->DR);     // это адрес регистра данных USART1
+  dma.DMA_MemoryBaseAddr = (uint32_t)&DMABuffer[0];         // адрес нулевого элемента массива
   dma.DMA_DIR = DMA_DIR_PeripheralSRC;                      // принимаем данные с периферии
-  dma.DMA_Mode = DMA_Mode_Circular;                         // Режим DMA - циклический
+  dma.DMA_Mode = DMA_Mode_Circular;                           // Режим DMA - Single
   dma.DMA_BufferSize = DMA_BUFFER_SIZE;                     // буфер – 16 байт (#define DMA_BUFFER_SIZE 16)
   dma.DMA_PeripheralInc = DMA_PeripheralInc_Disable;        // перифериию не инкрементируем
   dma.DMA_MemoryInc = DMA_MemoryInc_Enable;                 // память инкрементируем
@@ -135,8 +133,8 @@ void DMA_config(void)
   dma.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;         // шлем байтами
 	 
   //Инициализируем DMA1
-  DMA_Init(DMA1_Channel3, &dma);	                          // Идем в таблицу с каналами – USART3_RX – 3 канал, все верно =)
+  DMA_Init(DMA1_Channel5, &dma);	                          // Идем в таблицу с каналами – USART1_RX – 5 канал, все верно =)
 	
   //Включаем прямой доступ к памяти DMA
-  DMA_Cmd(DMA1_Channel3, ENABLE);	
+  DMA_Cmd(DMA1_Channel5, ENABLE);	
 }

@@ -10,8 +10,9 @@
 #include "task.h"
 
 extern uint8_t commandor;
-extern uint8_t val;
+extern uint8_t keyBoardStatus;
 extern char uart_inbyte[2];
+extern uint32_t GPSBuffer[DMA_BUFFER_SIZE];
 
 int8_t movx1 = 2, movy1 = 1;
 int8_t movx2 = 2, movy2 = 3;
@@ -26,9 +27,15 @@ int8_t step = 0;
 
 void Cursors_Up_Down(void){   
 	
-    if(movx1>11) movx1 = 11;  if(movx1<2) movx1 = 2;
-    if(movx2>11) movx2 = 11;  if(movx2<2) movx2 = 2;
-    switch(val){
+		uint8_t outOfRangeLeft = 0;
+    //uint8_t outOfRangeRight = 0;
+	
+    if(movx1>11) movx1 = 11;  if(movx1<2){if(keyBoardStatus==1)outOfRangeLeft = 1; else movx1 = 2;}
+    if(movx2>11) movx2 = 11;  if(movx2<2){if(keyBoardStatus==1)outOfRangeLeft = 1; else movx2 = 2;}
+		
+		if(outOfRangeLeft){commandor = 2;}
+	
+    switch(keyBoardStatus){
         case 2: { movx1++; movx2++; step = 0;}; break;
         case 1: { movx1--; movx2--; step = 0;}; break;
     }
@@ -40,7 +47,7 @@ void Cursors_Up_Down(void){
 
 void Number_Editor(void){
 	
-    switch(val){
+    switch(keyBoardStatus){
         case 3: {
 					step++; break;
 				}
@@ -53,16 +60,16 @@ void Number_Editor(void){
 		if(step>9) step = 9;
 		
     switch(movx1){
-        case 2:  { if(val==3||val==4 ) number[0] = (*digits+step);}; break;
-        case 3:  { if(val==3||val==4 ) number[1] = (*digits+step);}; break;
-        case 4:  { if(val==3||val==4 ) number[2] = (*digits+step);}; break;
-        case 5:  { if(val==3||val==4 ) number[3] = (*digits+step);}; break;
-        case 6:  { if(val==3||val==4 ) number[4] = (*digits+step);}; break;
-        case 7:  { if(val==3||val==4 ) number[5] = (*digits+step);}; break;
-        case 8:  { if(val==3||val==4 ) number[6] = (*digits+step);}; break;
-        case 9:  { if(val==3||val==4 ) number[7] = (*digits+step);}; break;
-        case 10: { if(val==3||val==4 ) number[8] = (*digits+step);}; break;
-        case 11: { if(val==3||val==4 ) number[9] = (*digits+step);}; break;
+        case 2:  { if(keyBoardStatus==3||keyBoardStatus==4 ) number[0] = (*digits+step);}; break;
+        case 3:  { if(keyBoardStatus==3||keyBoardStatus==4 ) number[1] = (*digits+step);}; break;
+        case 4:  { if(keyBoardStatus==3||keyBoardStatus==4 ) number[2] = (*digits+step);}; break;
+        case 5:  { if(keyBoardStatus==3||keyBoardStatus==4 ) number[3] = (*digits+step);}; break;
+        case 6:  { if(keyBoardStatus==3||keyBoardStatus==4 ) number[4] = (*digits+step);}; break;
+        case 7:  { if(keyBoardStatus==3||keyBoardStatus==4 ) number[5] = (*digits+step);}; break;
+        case 8:  { if(keyBoardStatus==3||keyBoardStatus==4 ) number[6] = (*digits+step);}; break;
+        case 9:  { if(keyBoardStatus==3||keyBoardStatus==4 ) number[7] = (*digits+step);}; break;
+        case 10: { if(keyBoardStatus==3||keyBoardStatus==4 ) number[8] = (*digits+step);}; break;
+        case 11: { if(keyBoardStatus==3||keyBoardStatus==4 ) number[9] = (*digits+step);}; break;
     }
 		LcdGotoXYFont(1, 0);
     LcdFStr(FONT_1X,(uint8_t*)"Enter number:");
@@ -74,7 +81,7 @@ void Number_Editor(void){
 
 void Number_Generator_Call(void){
 	
-	if(val==5){
+	if(keyBoardStatus==5){
 		char buffer[25];
 		strcpy(buffer, prefix);
 		send_str_to_UART3(strcat(buffer, number));
@@ -91,7 +98,7 @@ void LCD_Call_Window(void){
 	LcdGotoXYFont(0, 4);
   LcdFStr(FONT_1X,(uint8_t*)"Press [->] END");
 	
-	if(val==2) {
+	if(keyBoardStatus==2) {
     send_str_to_UART3(endcall);
 		commandor = 3;
   }
@@ -104,7 +111,7 @@ void LCD_Call_Answer(void){
 	LcdGotoXYFont(0, 4);
   LcdFStr(FONT_1X,(uint8_t*)"Press [<-] ANS");
 	
-	if(val==1) {
+	if(keyBoardStatus==1) {
     send_str_to_UART3(answercall);
   }
 }
@@ -114,4 +121,10 @@ void LCD_Number_Generator(void){
   Cursors_Up_Down();
 	Number_Editor();
 	Number_Generator_Call();
+}
+
+void LCD_GPS_Data(void){
+	
+  LcdGotoXYFont(0, 0); LcdFStr(FONT_1X,(uint8_t*)GPSBuffer);
+	if(keyBoardStatus==2) commandor = 3; //**TEST
 }

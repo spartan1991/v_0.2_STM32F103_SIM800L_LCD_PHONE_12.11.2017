@@ -4,3 +4,4 @@ void LCD_Number_Generator(void);
 void Number_Generator_Call(void);
 void LCD_Call_Window(void);
 void LCD_Call_Answer(void);
+void LCD_GPS_Data(void);

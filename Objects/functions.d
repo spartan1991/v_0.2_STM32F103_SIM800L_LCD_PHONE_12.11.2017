@@ -1,5 +1,6 @@
 .\objects\functions.o: Functions\functions.c
 .\objects\functions.o: Functions\functions.h
+.\objects\functions.o: .\CPU-Init\cpu_init.h
 .\objects\functions.o: .\Visualization\visualization.h
 .\objects\functions.o: C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include\stm32f10x.h
 .\objects\functions.o: .\CMSIS\CM3\CoreSupport\core_cm3.h
