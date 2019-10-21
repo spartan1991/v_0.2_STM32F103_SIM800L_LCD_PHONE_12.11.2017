@@ -12,7 +12,7 @@
 uint8_t commandor;
 extern uint8_t keyBoardStatus;
 extern char uart_inbyte[2];
-extern uint32_t GPSBuffer[DMA_BUFFER_SIZE];
+extern uint32_t GPSBuffer[DMA_GPS_BUFFER_SIZE];
 
 int8_t movx1 = 2, movy1 = 1;
 int8_t movx2 = 2, movy2 = 3;

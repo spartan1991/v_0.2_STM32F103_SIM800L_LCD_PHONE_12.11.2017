@@ -1,7 +1,9 @@
 #include "cpu_init.h"
 
-uint32_t DMABuffer[DMA_BUFFER_SIZE];
-uint32_t GPSBuffer[DMA_BUFFER_SIZE];
+uint32_t DMA_GPSBuffer[DMA_GPS_BUFFER_SIZE];
+uint32_t GPSBuffer[DMA_GPS_BUFFER_SIZE];
+uint32_t DMA_GSMBuffer[DMA_GSM_BUFFER_SIZE];
+uint32_t GSMBuffer[DMA_GSM_BUFFER_SIZE];
 
 void GPIO_Pins_Init(void)
 {
@@ -68,7 +70,7 @@ void GPIO_Pins_Init(void)
 //Функция настройки UART1
 void USART1_GPS_Init(void)
 {
-  //Заполняем структуру настройками 3-го UARTa
+  //Заполняем структуру настройками 1-го UARTa
   USART_InitTypeDef uart1_struct;
   uart1_struct.USART_BaudRate            = 9600;
   uart1_struct.USART_WordLength          = USART_WordLength_8b;
@@ -103,7 +105,7 @@ void USART3_GSM_Init(void)
   USART_Init(USART3, &uart3_struct);
 	
 	//Активируем приём с последовательного порта по запросу DMA
-  //USART_DMACmd(USART3, USART_DMAReq_Rx, ENABLE);
+  USART_DMACmd(USART3, USART_DMAReq_Rx, ENABLE);
 
   //Включаем UART
   USART_Cmd(USART3, ENABLE);
@@ -112,27 +114,49 @@ void USART3_GSM_Init(void)
 //Функция настройки DMA1
 void DMA1_GPS_Init(void)
 {
-  DMA_InitTypeDef dma;  //Создаём структуру для настройки DMA1
+  DMA_InitTypeDef dmagps;  //Создаём структуру для настройки DMA1
   //Заполняем структуру настройками DMA1
-  DMA_StructInit(&dma);
-  dma.DMA_PeripheralBaseAddr = (uint32_t)&(USART1->DR);     // это адрес регистра данных USART1
-  dma.DMA_MemoryBaseAddr = (uint32_t)&DMABuffer[0];         // адрес нулевого элемента массива
-  dma.DMA_DIR = DMA_DIR_PeripheralSRC;                      // принимаем данные с периферии
-  dma.DMA_Mode = DMA_Mode_Circular;                           // Режим DMA - Single
-  dma.DMA_BufferSize = DMA_BUFFER_SIZE;                     // буфер – 16 байт (#define DMA_BUFFER_SIZE 16)
-  dma.DMA_PeripheralInc = DMA_PeripheralInc_Disable;        // перифериию не инкрементируем
-  dma.DMA_MemoryInc = DMA_MemoryInc_Enable;                 // память инкрементируем
-  dma.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte; // шлем байтами
-  dma.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;         // шлем байтами
+  DMA_StructInit(&dmagps);
+  dmagps.DMA_PeripheralBaseAddr = (uint32_t)&(USART1->DR);     // это адрес регистра данных USART1
+  dmagps.DMA_MemoryBaseAddr = (uint32_t)&DMA_GPSBuffer[0];         // адрес нулевого элемента массива
+  dmagps.DMA_DIR = DMA_DIR_PeripheralSRC;                      // принимаем данные с периферии
+  dmagps.DMA_Mode = DMA_Mode_Circular;                         // Режим DMA - Single
+  dmagps.DMA_BufferSize = DMA_GPS_BUFFER_SIZE;                     // буфер – 16 байт (#define DMA_BUFFER_SIZE 16)
+  dmagps.DMA_PeripheralInc = DMA_PeripheralInc_Disable;        // перифериию не инкрементируем
+  dmagps.DMA_MemoryInc = DMA_MemoryInc_Enable;                 // память инкрементируем
+  dmagps.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte; // шлем байтами
+  dmagps.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;         // шлем байтами
 	 
   //Инициализируем DMA1
-  DMA_Init(DMA1_Channel5, &dma);	                          // Идем в таблицу с каналами – USART1_RX – 5 канал, все верно =)
+  DMA_Init(DMA1_Channel5, &dmagps);	                          // Идем в таблицу с каналами – USART1_RX – 5 канал, все верно =)
 	
   //Включаем прямой доступ к памяти DMA
   DMA_Cmd(DMA1_Channel5, ENABLE);	
 }
 
-void InitButton()
+void DMA1_GSM_Init(void)
+{
+  DMA_InitTypeDef dmagsm;  //Создаём структуру для настройки DMA1
+  //Заполняем структуру настройками DMA1
+  DMA_StructInit(&dmagsm);
+  dmagsm.DMA_PeripheralBaseAddr = (uint32_t)&(USART3->DR);     // это адрес регистра данных USART1
+  dmagsm.DMA_MemoryBaseAddr = (uint32_t)&DMA_GSMBuffer[0];     // адрес нулевого элемента массива
+  dmagsm.DMA_DIR = DMA_DIR_PeripheralSRC;                      // принимаем данные с периферии
+  dmagsm.DMA_Mode = DMA_Mode_Circular;                         // Режим DMA - Single
+  dmagsm.DMA_BufferSize = DMA_GSM_BUFFER_SIZE;                     // буфер – 16 байт (#define DMA_BUFFER_SIZE 16)
+  dmagsm.DMA_PeripheralInc = DMA_PeripheralInc_Disable;        // перифериию не инкрементируем
+  dmagsm.DMA_MemoryInc = DMA_MemoryInc_Enable;                 // память инкрементируем
+  dmagsm.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte; // шлем байтами
+  dmagsm.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;         // шлем байтами
+	 
+  //Инициализируем DMA1
+  DMA_Init(DMA1_Channel3, &dmagsm);	                          // Идем в таблицу с каналами – USART3_RX – 3 канал, все верно =)
+	
+  //Включаем прямой доступ к памяти DMA
+  DMA_Cmd(DMA1_Channel3, ENABLE);	
+}
+
+void Buttons_Init()
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	EXTI_InitTypeDef EXTI_InitTypeDefStructure;
@@ -174,6 +198,9 @@ void EXTI9_5_IRQHandler()
 {
   if (EXTI_GetITStatus(EXTI_Line5) != RESET)      // Left Button
   {
+		LcdClear();
+		LcdGotoXYFont(0, 0); LcdFStr(FONT_1X,(uint8_t*)GPSBuffer);
+		LcdUpdate();	
 		//setPressedButton(LEFT);
 		
 	  EXTI_ClearITPendingBit(EXTI_Line5);
@@ -186,6 +213,9 @@ void EXTI9_5_IRQHandler()
   }
 	  else if (EXTI_GetITStatus(EXTI_Line9) != RESET) // Right Button
   {
+		LcdClear();
+		LcdGotoXYFont(0, 0); LcdFStr(FONT_1X,(uint8_t*)GSMBuffer);
+		LcdUpdate();	
 		//setPressedButton(RIGHT);
 		
 	  EXTI_ClearITPendingBit(EXTI_Line9);
@@ -204,12 +234,46 @@ void EXTI9_5_IRQHandler()
   }
 };
 
+void GPSbufferCopyDMAbuffer(char buf1[], char buf2[], uint32_t val){
+	
+	uint8_t copyFlag = 0, block = 0;
+	uint32_t i=0, y=0;
+	
+	for(i = 0; i < val; i++){	
+		if(buf2[i]=='$'&&block!=1){copyFlag = 1; block=1;}
+		if(buf2[i]=='\n'){copyFlag = 0;}
+		if(copyFlag){ 
+			buf1[y++] = buf2[i];
+		}
+	}
+}
+
+void GSMbufferCopyDMAbuffer(char buf1[], char buf2[], uint32_t val){
+	
+	for(uint32_t i = 0; i < val; i++){	
+
+		buf1[i] = buf2[i];
+	}
+}
+
+void refreshGPSbuffer(void){
+	
+	GPSbufferCopyDMAbuffer((char*)GPSBuffer, (char*)DMA_GPSBuffer, DMA_GPS_BUFFER_SIZE);
+}
+
+void refreshGSMbuffer(void){
+	
+	GSMbufferCopyDMAbuffer((char*)GSMBuffer, (char*)DMA_GSMBuffer, DMA_GSM_BUFFER_SIZE);
+}
+
 void System_Init(void){
 	
   GPIO_Pins_Init();
+	Buttons_Init();
 	USART1_GPS_Init();
 	USART3_GSM_Init();
   DMA1_GPS_Init();
+	DMA1_GSM_Init();
 	GPS_SIM28ML_Init();
   SIM800L_Init();
   LcdInit();

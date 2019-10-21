@@ -11,6 +11,9 @@
 #include "n3310.h"
 #include "uart.h"
 
-#define DMA_BUFFER_SIZE 60
+#define DMA_GPS_BUFFER_SIZE 84
+#define DMA_GSM_BUFFER_SIZE 84
 
 void System_Init(void);
+void refreshGPSbuffer(void);
+void refreshGSMbuffer(void);
