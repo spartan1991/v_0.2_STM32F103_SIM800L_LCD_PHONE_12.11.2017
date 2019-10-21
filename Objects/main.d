@@ -1,12 +1,1 @@
 .\objects\main.o: Main\main.c
-.\objects\main.o: .\FreeRTOS\include\FreeRTOS.h
-.\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-.\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
-.\objects\main.o: .\FreeRTOS\include\projdefs.h
-.\objects\main.o: .\FreeRTOS\FreeRTOSConfig.h
-.\objects\main.o: .\FreeRTOS\include\portable.h
-.\objects\main.o: .\FreeRTOS\portmacro.h
-.\objects\main.o: .\FreeRTOS\include\mpu_wrappers.h
-.\objects\main.o: .\Tasks\tasks.h
-.\objects\main.o: .\FreeRTOS\include\task.h
-.\objects\main.o: .\FreeRTOS\include\list.h

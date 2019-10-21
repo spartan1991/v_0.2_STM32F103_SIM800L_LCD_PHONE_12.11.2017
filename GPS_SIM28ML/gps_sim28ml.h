@@ -1,1 +1,1 @@
-void GPS_SIM28ML_config(void);
+void GPS_SIM28ML_Init(void);

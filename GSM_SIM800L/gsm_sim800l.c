@@ -2,7 +2,7 @@
 #include "uart.h"
 
 //Функция настройки GSM-модуля SIM800L
-void SIM800L_config(void){
+void SIM800L_Init(void){
 	
 	send_str_to_UART3("ATE0");
 	send_str_to_UART3("ATV0");

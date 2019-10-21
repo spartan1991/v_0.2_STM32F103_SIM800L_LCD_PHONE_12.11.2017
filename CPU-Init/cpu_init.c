@@ -1,16 +1,9 @@
 #include "cpu_init.h"
-#include "stm32f10x.h"       
-#include "stm32f10x_rcc.h"   
-#include "stm32f10x_gpio.h"  
-#include "stm32f10x_dma.h"   
-#include "stm32f10x_usart.h"
-#include "stm32f10x_conf.h"
-#include "uart.h"
 
 uint32_t DMABuffer[DMA_BUFFER_SIZE];
 uint32_t GPSBuffer[DMA_BUFFER_SIZE];
 
-void System_config(void)
+void GPIO_Pins_Init(void)
 {
   //__enable_irq(); // Разрешить прерывания глобально
 	
@@ -73,7 +66,7 @@ void System_config(void)
 }
 
 //Функция настройки UART1
-void USART1_GPS_config(void)
+void USART1_GPS_Init(void)
 {
   //Заполняем структуру настройками 3-го UARTa
   USART_InitTypeDef uart1_struct;
@@ -95,7 +88,7 @@ void USART1_GPS_config(void)
 }
 
 //Функция настройки UART3
-void USART3_GSM_config(void)
+void USART3_GSM_Init(void)
 {
   //Заполняем структуру настройками 3-го UARTa
   USART_InitTypeDef uart3_struct;
@@ -117,7 +110,7 @@ void USART3_GSM_config(void)
 }
 
 //Функция настройки DMA1
-void DMA1_GPS_config(void)
+void DMA1_GPS_Init(void)
 {
   DMA_InitTypeDef dma;  //Создаём структуру для настройки DMA1
   //Заполняем структуру настройками DMA1
@@ -137,4 +130,87 @@ void DMA1_GPS_config(void)
 	
   //Включаем прямой доступ к памяти DMA
   DMA_Cmd(DMA1_Channel5, ENABLE);	
+}
+
+void InitButton()
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
+	EXTI_InitTypeDef EXTI_InitTypeDefStructure;
+	NVIC_InitTypeDef NVIC_InitStructure;
+
+	/* GPIOB clock enable */
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+	/*Включили тактирование AFIO на шине APB2. Этот блок отвечает за внешние прерывания как AF*/
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
+
+	// Configure PB.5/6/7/8/9 as Input
+	GPIO_InitStructure.GPIO_Pin = (GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9);
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+	//Подключаем порт к прерыванию
+	GPIO_EXTILineConfig(GPIO_PortSourceGPIOB,GPIO_PinSource5);
+	GPIO_EXTILineConfig(GPIO_PortSourceGPIOB,GPIO_PinSource6);
+	GPIO_EXTILineConfig(GPIO_PortSourceGPIOB,GPIO_PinSource7);
+	GPIO_EXTILineConfig(GPIO_PortSourceGPIOB,GPIO_PinSource8);
+	GPIO_EXTILineConfig(GPIO_PortSourceGPIOB,GPIO_PinSource9);
+
+	EXTI_InitTypeDefStructure.EXTI_Line = EXTI_Line5 | EXTI_Line6 | EXTI_Line7 | EXTI_Line8 | EXTI_Line9;
+	EXTI_InitTypeDefStructure.EXTI_LineCmd = ENABLE;
+	EXTI_InitTypeDefStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+	EXTI_InitTypeDefStructure.EXTI_Trigger = EXTI_Trigger_Falling;
+	EXTI_Init(&EXTI_InitTypeDefStructure);
+	//EXTI_ClearITPendingBit(EXTI_Line5 | EXTI_Line6 | EXTI_Line7 | EXTI_Line8 | EXTI_Line9);
+
+	NVIC_InitStructure.NVIC_IRQChannel = EXTI9_5_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+	NVIC_Init(&NVIC_InitStructure);
+};
+
+void EXTI9_5_IRQHandler()
+{
+  if (EXTI_GetITStatus(EXTI_Line5) != RESET)      // Left Button
+  {
+		//setPressedButton(LEFT);
+		
+	  EXTI_ClearITPendingBit(EXTI_Line5);
+  }
+	else if (EXTI_GetITStatus(EXTI_Line8) != RESET) // Up Button
+  {
+		//setPressedButton(UP);
+		
+	  EXTI_ClearITPendingBit(EXTI_Line8);
+  }
+	  else if (EXTI_GetITStatus(EXTI_Line9) != RESET) // Right Button
+  {
+		//setPressedButton(RIGHT);
+		
+	  EXTI_ClearITPendingBit(EXTI_Line9);
+  }
+  else if (EXTI_GetITStatus(EXTI_Line6) != RESET) // Down Button
+  {
+		//setPressedButton(DOWN);
+		
+	  EXTI_ClearITPendingBit(EXTI_Line6);
+  }
+  else if (EXTI_GetITStatus(EXTI_Line7) != RESET) // Center Button
+  {	
+		//setPressedButton(CENTER);
+		
+	  EXTI_ClearITPendingBit(EXTI_Line7);
+  }
+};
+
+void System_Init(void){
+	
+  GPIO_Pins_Init();
+	USART1_GPS_Init();
+	USART3_GSM_Init();
+  DMA1_GPS_Init();
+	GPS_SIM28ML_Init();
+  SIM800L_Init();
+  LcdInit();
 }

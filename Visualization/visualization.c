@@ -9,7 +9,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-extern uint8_t commandor;
+uint8_t commandor;
 extern uint8_t keyBoardStatus;
 extern char uart_inbyte[2];
 extern uint32_t GPSBuffer[DMA_BUFFER_SIZE];
@@ -127,4 +127,26 @@ void LCD_GPS_Data(void){
 	
   LcdGotoXYFont(0, 0); LcdFStr(FONT_1X,(uint8_t*)GPSBuffer);
 	if(keyBoardStatus==2) commandor = 3; //**TEST
+}
+
+void vTask_Visualization(void *pvParameters){
+	
+	if(keyBoardStatus!=0){
+		  LcdClear();
+	  }
+		switch(commandor){
+			case 2: {			
+			  LcdClear(); LCD_GPS_Data();	break;
+			}			
+			case 3: {
+				LcdClear(); LCD_Number_Generator(); break;
+			}
+			case 4: {
+				LcdClear(); LCD_Call_Window(); break;
+			}
+			case 5: {
+			  LcdClear(); LCD_Call_Answer(); break;
+			}
+		}
+	LcdUpdate();
 }

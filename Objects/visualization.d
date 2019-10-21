@@ -2,16 +2,16 @@
 .\objects\visualization.o: Visualization\visualization.h
 .\objects\visualization.o: .\Functions\functions.h
 .\objects\visualization.o: .\CPU-Init\cpu_init.h
-.\objects\visualization.o: .\Visualization\visualization.h
+.\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\inc\misc.h
 .\objects\visualization.o: C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include\stm32f10x.h
 .\objects\visualization.o: .\CMSIS\CM3\CoreSupport\core_cm3.h
 .\objects\visualization.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\visualization.o: C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include\system_stm32f10x.h
+.\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_exti.h
 .\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_rcc.h
 .\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_gpio.h
 .\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_dma.h
 .\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_usart.h
-.\objects\visualization.o: .\UART\uart.h
 .\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\STM32F10x_StdPeriph_Template\stm32f10x_conf.h
 .\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_adc.h
 .\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_bkp.h
@@ -20,7 +20,6 @@
 .\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_crc.h
 .\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_dac.h
 .\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_dbgmcu.h
-.\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_exti.h
 .\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_flash.h
 .\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_fsmc.h
 .\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_i2c.h
@@ -31,10 +30,14 @@
 .\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_spi.h
 .\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_tim.h
 .\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_wwdg.h
-.\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\inc\misc.h
+.\objects\visualization.o: .\GPS_SIM28ML\gps_sim28ml.h
+.\objects\visualization.o: .\GSM_SIM800L\gsm_sim800l.h
+.\objects\visualization.o: .\LCD5110 (Driver AVR to STM)\n3310.h
+.\objects\visualization.o: .\UART\uart.h
+.\objects\visualization.o: .\Visualization\visualization.h
+.\objects\visualization.o: .\UART\uart.h
 .\objects\visualization.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\objects\visualization.o: .\UART\uart.h
-.\objects\visualization.o: .\LCD5110 (Driver AVR to STM)\n3310.h
 .\objects\visualization.o: .\FreeRTOS\include\FreeRTOS.h
 .\objects\visualization.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\visualization.o: .\FreeRTOS\include\projdefs.h

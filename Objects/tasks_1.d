@@ -1,5 +1,4 @@
 .\objects\tasks_1.o: Tasks\tasks.c
-.\objects\tasks_1.o: Tasks\tasks.h
 .\objects\tasks_1.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_dma.h
 .\objects\tasks_1.o: C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include\stm32f10x.h
 .\objects\tasks_1.o: .\CMSIS\CM3\CoreSupport\core_cm3.h
@@ -36,14 +35,4 @@
 .\objects\tasks_1.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_wwdg.h
 .\objects\tasks_1.o: .\STM32F10x_StdPeriph_Driver\inc\misc.h
 .\objects\tasks_1.o: .\Visualization\visualization.h
-.\objects\tasks_1.o: .\FreeRTOS\include\FreeRTOS.h
-.\objects\tasks_1.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-.\objects\tasks_1.o: .\FreeRTOS\include\projdefs.h
-.\objects\tasks_1.o: .\FreeRTOS\FreeRTOSConfig.h
-.\objects\tasks_1.o: .\FreeRTOS\include\portable.h
-.\objects\tasks_1.o: .\FreeRTOS\portmacro.h
-.\objects\tasks_1.o: .\FreeRTOS\include\mpu_wrappers.h
-.\objects\tasks_1.o: .\FreeRTOS\include\task.h
-.\objects\tasks_1.o: .\FreeRTOS\include\list.h
-.\objects\tasks_1.o: .\FreeRTOS\include\queue.h
 .\objects\tasks_1.o: .\LCD5110 (Driver AVR to STM)\n3310.h

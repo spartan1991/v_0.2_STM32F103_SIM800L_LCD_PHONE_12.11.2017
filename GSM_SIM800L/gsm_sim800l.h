@@ -1,1 +1,1 @@
-void SIM800L_config(void);
+void SIM800L_Init(void);
