@@ -9,5 +9,3 @@
 #include "stm32f10x_conf.h"
 
 void KeysScan(void);
-void clearBuffer(char buf[], uint32_t val);
-void refreshGPSbuffer(void);

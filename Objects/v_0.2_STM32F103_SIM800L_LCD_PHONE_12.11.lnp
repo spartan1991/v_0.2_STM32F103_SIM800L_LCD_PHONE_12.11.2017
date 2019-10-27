@@ -24,6 +24,7 @@
 ".\objects\functions.o"
 ".\objects\cpu_init.o"
 ".\objects\gps_sim28ml.o"
+".\objects\models.o"
 --ro-base 0x08000000 --entry 0x08000000 --rw-base 0x20000000 --entry Reset_Handler --first __Vectors --strict --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list ".\Listings\v_0.2_STM32F103_SIM800L_LCD_PHONE_12.11.map" -o .\Objects\v_0.2_STM32F103_SIM800L_LCD_PHONE_12.11.2017

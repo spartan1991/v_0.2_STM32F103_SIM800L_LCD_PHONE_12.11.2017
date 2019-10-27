@@ -15,5 +15,5 @@
 #define DMA_GSM_BUFFER_SIZE 84
 
 void System_Init(void);
-void refreshGPSbuffer(void);
-void refreshGSMbuffer(void);
+uint32_t* refreshGPSbuffer(void);
+uint32_t* refreshGSMbuffer(void);

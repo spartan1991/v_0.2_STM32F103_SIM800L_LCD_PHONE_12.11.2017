@@ -31,6 +31,8 @@
 .\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_tim.h
 .\objects\visualization.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_wwdg.h
 .\objects\visualization.o: .\GPS_SIM28ML\gps_sim28ml.h
+.\objects\visualization.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\visualization.o: .\Models\models.h
 .\objects\visualization.o: .\GSM_SIM800L\gsm_sim800l.h
 .\objects\visualization.o: .\LCD5110 (Driver AVR to STM)\n3310.h
 .\objects\visualization.o: .\UART\uart.h

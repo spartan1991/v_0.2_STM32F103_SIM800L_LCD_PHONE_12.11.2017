@@ -29,6 +29,8 @@
 .\objects\cpu_init.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_tim.h
 .\objects\cpu_init.o: .\STM32F10x_StdPeriph_Driver\inc\stm32f10x_wwdg.h
 .\objects\cpu_init.o: .\GPS_SIM28ML\gps_sim28ml.h
+.\objects\cpu_init.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\cpu_init.o: .\Models\models.h
 .\objects\cpu_init.o: .\GSM_SIM800L\gsm_sim800l.h
 .\objects\cpu_init.o: .\LCD5110 (Driver AVR to STM)\n3310.h
 .\objects\cpu_init.o: .\UART\uart.h

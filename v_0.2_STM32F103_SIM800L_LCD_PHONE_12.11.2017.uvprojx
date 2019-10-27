@@ -336,7 +336,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>.\CMSIS\CM3\CoreSupport;.\CMSIS\CM3\DeviceSupport;.\FreeRTOS;.\FreeRTOS\include;.\LCD5110 (Driver AVR to STM);.\STM32F10x_StdPeriph_Driver\src;.\STM32F10x_StdPeriph_Driver\inc;.\Wi-Fi_ESP8266;.\Main;.\GSM_SIM800L;.\UART;.\Visualization;.\STM32F10x_StdPeriph_Driver\STM32F10x_StdPeriph_Template;.\Functions;.\Tasks;.\CPU-Init;.\GPS_SIM28ML</IncludePath>
+              <IncludePath>.\CMSIS\CM3\CoreSupport;.\CMSIS\CM3\DeviceSupport;.\FreeRTOS;.\FreeRTOS\include;.\LCD5110 (Driver AVR to STM);.\STM32F10x_StdPeriph_Driver\src;.\STM32F10x_StdPeriph_Driver\inc;.\Wi-Fi_ESP8266;.\Main;.\GSM_SIM800L;.\UART;.\Visualization;.\STM32F10x_StdPeriph_Driver\STM32F10x_StdPeriph_Template;.\Functions;.\Tasks;.\CPU-Init;.\GPS_SIM28ML;.\Models</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -559,6 +559,16 @@
               <FileName>gps_sim28ml.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\GPS_SIM28ML\gps_sim28ml.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Models</GroupName>
+          <Files>
+            <File>
+              <FileName>models.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Models\models.c</FilePath>
             </File>
           </Files>
         </Group>

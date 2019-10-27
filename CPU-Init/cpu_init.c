@@ -5,6 +5,14 @@ uint32_t GPSBuffer[DMA_GPS_BUFFER_SIZE];
 uint32_t DMA_GSMBuffer[DMA_GSM_BUFFER_SIZE];
 uint32_t GSMBuffer[DMA_GSM_BUFFER_SIZE];
 
+void Clean_Buffer(uint32_t buf[], uint32_t size){
+	
+	for(uint32_t i = 0; i < size; i++){
+		
+		buf[i] = 0;
+	}
+}
+
 void GPIO_Pins_Init(void)
 {
   //__enable_irq(); // Разрешить прерывания глобально
@@ -234,21 +242,24 @@ void EXTI9_5_IRQHandler()
   }
 };
 
-void GPSbufferCopyDMAbuffer(char buf1[], char buf2[], uint32_t val){
+uint32_t DMAbufferCopyToGPSbuffer(char buf1[], char buf2[], uint32_t val){
 	
 	uint8_t copyFlag = 0, block = 0;
 	uint32_t i=0, y=0;
 	
 	for(i = 0; i < val; i++){	
 		if(buf2[i]=='$'&&block!=1){copyFlag = 1; block=1;}
-		if(buf2[i]=='\n'){copyFlag = 0;}
-		if(copyFlag){ 
-			buf1[y++] = buf2[i];
+		if(buf2[i]=='\n'||buf2[i]=='\r'){
+			copyFlag = 0; 
+			Clean_Buffer(DMA_GPSBuffer, DMA_GPS_BUFFER_SIZE);
+			return y;
 		}
+		if(copyFlag){buf1[y++] = buf2[i];}
 	}
+	return y;
 }
 
-void GSMbufferCopyDMAbuffer(char buf1[], char buf2[], uint32_t val){
+void DMAbufferCopyToGSMbuffer(char buf1[], char buf2[], uint32_t val){
 	
 	for(uint32_t i = 0; i < val; i++){	
 
@@ -256,14 +267,16 @@ void GSMbufferCopyDMAbuffer(char buf1[], char buf2[], uint32_t val){
 	}
 }
 
-void refreshGPSbuffer(void){
+uint32_t* refreshGPSbuffer(void){
 	
-	GPSbufferCopyDMAbuffer((char*)GPSBuffer, (char*)DMA_GPSBuffer, DMA_GPS_BUFFER_SIZE);
+	DMAbufferCopyToGPSbuffer((char*)GPSBuffer, (char*)DMA_GPSBuffer, DMA_GPS_BUFFER_SIZE);
+	return GPSBuffer;
 }
 
-void refreshGSMbuffer(void){
+uint32_t* refreshGSMbuffer(void){
 	
-	GSMbufferCopyDMAbuffer((char*)GSMBuffer, (char*)DMA_GSMBuffer, DMA_GSM_BUFFER_SIZE);
+	DMAbufferCopyToGSMbuffer((char*)GSMBuffer, (char*)DMA_GSMBuffer, DMA_GSM_BUFFER_SIZE);
+	return GSMBuffer;
 }
 
 void System_Init(void){
